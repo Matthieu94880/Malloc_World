@@ -1,5 +1,4 @@
 # Malloc_World
-Jeu programmé en langage C
 
 LANCEMENT DU PROGRAMME :
 
