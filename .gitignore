@@ -1,2 +1,10 @@
 *.o
+*.obj
+*.enc
 *.layout
+*.suo
+*.*db
+*.log
+*.tlog
+*.ipch
+*.ilk

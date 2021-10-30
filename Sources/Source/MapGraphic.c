@@ -17,8 +17,8 @@ ImageParElement;
 
 static ImageParElement imageParElement[] =
 {
-    ELT_PORTAIL_ZONE3,   ".\\Images\\PORTAIL_Z3.BMP", NULL,
-    ELT_PORTAIL_ZONE2,   ".\\Images\\PORTAIL_Z2.BMP", NULL,
+    ELT_PORTAIL_ZONE2_3, ".\\Images\\PORTAIL_Z2_3.BMP", NULL,
+    ELT_PORTAIL_ZONE1_2, ".\\Images\\PORTAIL_Z1_2.BMP", NULL,
     ELT_INFRANCHISSABLE, ".\\Images\\INFRANCHISSABLE.BMP", NULL,
     ELT_ZONE_LIBRE,      ".\\Images\\ZONE_LIBRE.BMP", NULL,
     ELT_JOUEUR,          ".\\Images\\JOUEUR.BMP", NULL,
@@ -71,7 +71,7 @@ static SDL_Surface * lireImage(Element_Map element)
 /*****************************************************************************
 ** Affiche l'image chargee d'un element vers une partie de la map
 ******************************************************************************/
-static void AfficherUneZone(Map * map, int idxHauteur, int idxLargeur)
+static void AfficherZone(Map * map, int idxHauteur, int idxLargeur)
 {
     if (idxHauteur < map->hauteur && idxLargeur < map->largeur)
     {
@@ -100,6 +100,18 @@ static void AfficherUneZone(Map * map, int idxHauteur, int idxLargeur)
 }
 
 /*****************************************************************************
+** Affiche l'image chargee d'un element vers une partie de la map et met a jour l'écran
+******************************************************************************/
+void AfficherZone_MapGraphic(Map * map, int idxHauteur, int idxLargeur)
+{
+    if (idxHauteur < map->hauteur && idxLargeur < map->largeur)
+    {
+        AfficherZone(map, idxHauteur, idxLargeur);
+        SDL_UpdateWindowSurface(pWindow);
+    }
+}
+
+/*****************************************************************************
 ** Affiche tous les elements de la map
 ******************************************************************************/
 void Afficher_MapGraphic(Map * map)
@@ -110,7 +122,7 @@ void Afficher_MapGraphic(Map * map)
         {
             for (int idxLargeur = 0; idxLargeur < map->largeur; idxLargeur++)
             {
-                AfficherUneZone(map, idxHauteur, idxLargeur);
+                AfficherZone(map, idxHauteur, idxLargeur);
             }
         }
     }
@@ -131,7 +143,7 @@ void Creer_MapGraphic(int largeur, int hauteur)
                                     SDL_WINDOWPOS_UNDEFINED,
                                     SDL_WINDOWPOS_UNDEFINED,
                                     LARGEUR_IMAGE * largeur,
-                                    HAUTEUR_IMAGE * hauteur, SDL_WINDOW_SHOWN| SDL_WINDOW_ALWAYS_ON_TOP);
+                                    HAUTEUR_IMAGE * hauteur, SDL_WINDOW_SHOWN);
 
         chargerImages();
 

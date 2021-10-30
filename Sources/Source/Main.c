@@ -1,31 +1,42 @@
 #include <stdio.h>
+#include <conio.h>
 #include "Map.h"
 #include "MapGraphic.h"
+#include "Player.h"
+#include "Action.h"
 
-static void ConstruireZone(Zone_Map zone, int largeur, int hauteur)
+static Map * ConstruireZone(Zone_Map zone, int largeur, int hauteur)
 {
 	Map * map = Creer_Map(zone, largeur, hauteur);
+
+    Creer_MapGraphic(largeur, hauteur);
 
 	Remplir_Map(map);
 
 	Afficher_Map(map);
 	Afficher_MapGraphic(map);
 
-	Detruire_Map(map);
+    return map;
+}
+
+static void DetruireZone(Map * map)
+{
+    Detruire_Map(map);
+    Terminer_MapGraphic();
 }
 
 int main()
 {
 	int hauteur = 20;
 	int largeur = 20;
-	Creer_MapGraphic(largeur, hauteur);
 
-	ConstruireZone(ZONE1, largeur, hauteur);
+    Player * player = initPlayer();
 
-	printf("\n< Appuyer sur une touche >");
-	getchar();
+    Map * map = ConstruireZone(ZONE1, largeur, hauteur);
 
-	Terminer_MapGraphic();
+    Jouer_Action(map, player);
+
+    DetruireZone(map);
 }
 
 

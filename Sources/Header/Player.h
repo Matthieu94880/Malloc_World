@@ -1,3 +1,7 @@
+
+#ifndef Player_h_
+#define Player_h_
+
 //
 // Created by theo on 20/10/2021.
 //
@@ -37,4 +41,6 @@ typedef struct Player {
 
 }Player;
 
+Player *    initPlayer();
 
+#endif Player_h_

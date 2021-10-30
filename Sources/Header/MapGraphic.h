@@ -10,4 +10,6 @@ void Terminer_MapGraphic();
 
 void Afficher_MapGraphic(Map * map);
 
+void AfficherZone_MapGraphic(Map * map, int idxHauteur, int idxLargeur);
+
 #endif

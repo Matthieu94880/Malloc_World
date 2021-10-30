@@ -4,10 +4,10 @@
 
 typedef enum
 {
-    ELT_DEFAULT         = -9,
+    ELT_NULL            = -9,
 
-    ELT_PORTAIL_ZONE3   = -3,
-    ELT_PORTAIL_ZONE2   = -2,
+    ELT_PORTAIL_ZONE2_3 = -3,
+    ELT_PORTAIL_ZONE1_2 = -2,
     ELT_INFRANCHISSABLE = -1,
     ELT_ZONE_LIBRE      = 0,
     ELT_JOUEUR          = 1,
@@ -43,6 +43,13 @@ typedef struct
 }
 Map;
 
+struct
+{
+    int x;
+    int y;
+}
+playerPosition;
+
 /*****************************************************************************
 ** Alloue la map et l'initialise
 ******************************************************************************/
@@ -57,6 +64,11 @@ void    Remplir_Map(Map * map);
 ** Retourne l'element de la zone de la map
 ******************************************************************************/
 Element_Map LireElement_Map(const Map * map, int hauteur, int largeur);
+
+/*****************************************************************************
+** Ecrit un element dans un endroit de la map
+******************************************************************************/
+void    EcrireElement_Map(const Map * map, int hauteur, int largeur, Element_Map element);
 
 /*****************************************************************************
 ** Desalloue la map

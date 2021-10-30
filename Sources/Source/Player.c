@@ -43,6 +43,8 @@ Player modifyArmor(Player *Hero, int idArmor, itemList *item) {
             item = item->next;
         }
     }*/
+
+    return *Hero;
 }
 
 
