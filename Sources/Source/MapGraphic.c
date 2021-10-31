@@ -1,22 +1,30 @@
+/*
+** Filename : MapGraphic.c
+**
+** Made by : Matthieu BARRIERE
+**
+** Description : Display the Malloc_World map with SDL graphic library
+*/
+
+#include <stdio.h>
 #include "SDL.h"
 #include "Map.h"
 #include "MapGraphic.h"
 
-#define LARGEUR_IMAGE    34
-#define HAUTEUR_IMAGE    34
+#define PICTURE_WIDTH    34
+#define PICTURE_HEIGHT   34
 
 static SDL_Window * pWindow = NULL;
 
-typedef struct
-{
+typedef struct {
     Element_Map   element;
-    char *        nomFichierImage;
-    SDL_Surface * pImage;
+    char *        fileName;
+    SDL_Surface * pSurface;
 }
-ImageParElement;
+ElementPicture;
 
-static ImageParElement imageParElement[] =
-{
+static ElementPicture elementPicture[] = {
+
     ELT_PORTAIL_ZONE2_3, ".\\Images\\PORTAIL_Z2_3.BMP", NULL,
     ELT_PORTAIL_ZONE1_2, ".\\Images\\PORTAIL_Z1_2.BMP", NULL,
     ELT_INFRANCHISSABLE, ".\\Images\\INFRANCHISSABLE.BMP", NULL,
@@ -36,32 +44,28 @@ static ImageParElement imageParElement[] =
     ELT_BOSS,            ".\\Images\\BOSS.BMP", NULL
 };
 
-static int nombreImage = sizeof(imageParElement) / sizeof(ImageParElement);
+static int picturesCount = sizeof(elementPicture) / sizeof(ElementPicture);
 
 /*****************************************************************************
-** Charge les images avec la librairie SDL pour chaque element si pas deja fait
+** Loads an element picture
 ******************************************************************************/
-static void chargerImages()
-{
-    for (int i = 0; i < nombreImage; i++)
-    {
-        if (imageParElement[i].pImage == NULL)
-        {
-            imageParElement[i].pImage = SDL_LoadBMP(imageParElement[i].nomFichierImage);
+static void loadPictures() {
+
+    for (int i = 0; i < picturesCount; i++) {
+        if (elementPicture[i].pSurface == NULL) {
+            elementPicture[i].pSurface = SDL_LoadBMP(elementPicture[i].fileName);
         }
     }
 }
 
 /*****************************************************************************
-** Recupere l'image chargee pour un element (ou NULL si non trouvee)
+** Returns the loaded picture for an element or NULL if not found
 ******************************************************************************/
-static SDL_Surface * lireImage(Element_Map element)
-{
-    for (int i = 0; i < nombreImage; i++)
-    {
-        if (imageParElement[i].element == element)
-        {
-            return imageParElement[i].pImage;
+static SDL_Surface * getSurface(Element_Map element) {
+
+    for (int i = 0; i < picturesCount; i++) {
+        if (elementPicture[i].element == element) {
+            return elementPicture[i].pSurface;
         }
     }
 
@@ -69,105 +73,126 @@ static SDL_Surface * lireImage(Element_Map element)
 }
 
 /*****************************************************************************
-** Affiche l'image chargee d'un element vers une partie de la map
+** Displays a specific map zone
 ******************************************************************************/
-static void AfficherZone(Map * map, int idxHauteur, int idxLargeur)
-{
-    if (idxHauteur < map->hauteur && idxLargeur < map->largeur)
-    {
-        Element_Map element = LireElement_Map(map, idxHauteur, idxLargeur);
+static void displayZone(const Map * map, int x, int y) {
+
+    if (y < map->height && x < map->width) {
+        Element_Map element = getElement_Map(map, x, y);
 
         // patch a virer : remet tous les monstres de 12 a 98 a 12 pour avoir le meme fichier
-        if (element >= 12 && element <= 98)
-        {
+        if (element >= 12 && element <= 98) {
             element = ELT_MONSTRE;
         }
 
-        SDL_Surface * pImage = lireImage(element);
+        SDL_Surface * pSurface = getSurface(element);
 
-        if (pImage != NULL)
-        {
+        if (pSurface != NULL) {
             SDL_Rect dest;
 
-            dest.x = idxLargeur * LARGEUR_IMAGE;
-            dest.y = idxHauteur * HAUTEUR_IMAGE;
+            dest.x = x * PICTURE_WIDTH;
+            dest.y = y * PICTURE_HEIGHT;
             dest.w = 0;
             dest.h = 0;
 
-            SDL_BlitSurface(pImage, NULL, SDL_GetWindowSurface(pWindow), &dest);
+            SDL_BlitSurface(pSurface, NULL, SDL_GetWindowSurface(pWindow), &dest);
         }
     }
 }
 
 /*****************************************************************************
-** Affiche l'image chargee d'un element vers une partie de la map et met a jour l'écran
+** Displays a specific map zone and refresh the window
 ******************************************************************************/
-void AfficherZone_MapGraphic(Map * map, int idxHauteur, int idxLargeur)
-{
-    if (idxHauteur < map->hauteur && idxLargeur < map->largeur)
-    {
-        AfficherZone(map, idxHauteur, idxLargeur);
-        SDL_UpdateWindowSurface(pWindow);
-    }
-}
+void displayZone_MapGraphic(const Map * map, int x, int y) {
 
-/*****************************************************************************
-** Affiche tous les elements de la map
-******************************************************************************/
-void Afficher_MapGraphic(Map * map)
-{
-    if (pWindow != NULL)
-    {
-        for (int idxHauteur = 0; idxHauteur < map->hauteur; idxHauteur++)
-        {
-            for (int idxLargeur = 0; idxLargeur < map->largeur; idxLargeur++)
-            {
-                AfficherZone(map, idxHauteur, idxLargeur);
+    if (x < map->width && y < map->height) {
+
+        displayZone(map, x, y);
+
+        int returnCode = SDL_UpdateWindowSurface(pWindow);
+
+        if (returnCode < 0) {
+            printf("\nERROR - SDL_UpdateWindowSurface : %d", returnCode);
+        }
+        else {
+            SDL_Event event;
+
+            while (SDL_PollEvent(&event)) {  // poll until all events are handled!
             }
         }
     }
-
-    SDL_UpdateWindowSurface(pWindow);
 }
 
 /*****************************************************************************
-** Initialise la SDL, charge toutes les images et cree la fenetre principale
+** Displays all the map
 ******************************************************************************/
-void Creer_MapGraphic(int largeur, int hauteur)
-{
-    if (pWindow == NULL)
-    {
-        SDL_Init(0);
+void display_MapGraphic(const Map * map) {
 
-        pWindow = SDL_CreateWindow("MALLOC_WORLD",
-                                    SDL_WINDOWPOS_UNDEFINED,
-                                    SDL_WINDOWPOS_UNDEFINED,
-                                    LARGEUR_IMAGE * largeur,
-                                    HAUTEUR_IMAGE * hauteur, SDL_WINDOW_SHOWN);
+    if (pWindow != NULL) {
 
-        chargerImages();
+        for (int x = 0; x < map->width; x++) {
 
-        SDL_Surface * imageDeFond = SDL_LoadBMP(".\\Images\\Fond.bmp");
+            for (int y = 0; y < map->height; y++) {
 
-        if (imageDeFond != NULL)
-        {
-            SDL_Rect positionFond;
+                displayZone(map, x, y);
+            }
+        }
 
-            positionFond.x = 0;
-            positionFond.y = 0;
+        SDL_SetWindowTitle(pWindow, map->zone == ZONE1 ? "MALLOC_WORLD : ZONE1" :
+                                    map->zone == ZONE2 ? "MALLOC_WORLD : ZONE2" :
+                                                         "MALLOC_WORLD : ZONE3");
 
-            SDL_BlitSurface(imageDeFond, NULL, SDL_GetWindowSurface(pWindow), &positionFond);
+        int returnCode = SDL_UpdateWindowSurface(pWindow);
+
+        if (returnCode < 0) {
+            printf("\nERROR - SDL_UpdateWindowSurface : %d", returnCode);
+        }
+        else {
+            SDL_Event event;
+
+            while (SDL_PollEvent(&event)) {  // poll until all events are handled!
+            }
         }
     }
 }
 
 /*****************************************************************************
-** Detruit la SDL
+** SDL memory allocation. Loading pictures and create main graphic window
 ******************************************************************************/
-void Terminer_MapGraphic()
-{
-    if (pWindow != NULL)
-    {
+void create_MapGraphic(const Map * map) {
+
+    if (pWindow == NULL) {
+
+        SDL_Init(0);
+
+        pWindow = SDL_CreateWindow("",
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   SDL_WINDOWPOS_UNDEFINED,
+                                   PICTURE_WIDTH * map->width,
+                                   PICTURE_HEIGHT * map->height, SDL_WINDOW_OPENGL);
+
+        loadPictures();
+
+        SDL_Surface * mainPicture = SDL_LoadBMP(".\\Images\\Fond.bmp");
+
+        if (mainPicture != NULL) {
+
+            SDL_Rect pos;
+
+            pos.x = 0;
+            pos.y = 0;
+
+            SDL_BlitSurface(mainPicture, NULL, SDL_GetWindowSurface(pWindow), &pos);
+        }
+    }
+}
+
+/*****************************************************************************
+** SDL memory release
+******************************************************************************/
+void free_MapGraphic() {
+
+    if (pWindow != NULL) {
         SDL_Quit();
 
         pWindow = NULL;

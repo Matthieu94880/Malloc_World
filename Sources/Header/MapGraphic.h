@@ -1,15 +1,22 @@
+/*
+** Filename : MapGraphic.h
+**
+** Made by : Matthieu BARRIERE
+**
+** Description : Display the Malloc_World map with SDL graphic library
+*/
 
 #ifndef MapGraphic_h_
 #define MapGraphic_h_
 
 #include "Map.h"
 
-void Creer_MapGraphic(int largeur, int hauteur);
+void create_MapGraphic(const Map * map);
 
-void Terminer_MapGraphic();
+void free_MapGraphic();
 
-void Afficher_MapGraphic(Map * map);
+void display_MapGraphic(const Map * map);
 
-void AfficherZone_MapGraphic(Map * map, int idxHauteur, int idxLargeur);
+void displayZone_MapGraphic(const Map * map, int x, int y);
 
 #endif

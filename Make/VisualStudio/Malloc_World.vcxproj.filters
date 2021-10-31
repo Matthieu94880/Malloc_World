@@ -30,7 +30,7 @@
     <ClCompile Include="..\..\Sources\Source\Player.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Sources\Source\Action.c">
+    <ClCompile Include="..\..\Sources\Source\MallocWorld.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,7 +47,7 @@
     <ClInclude Include="..\..\Sources\Header\Player.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Sources\Header\Action.h">
+    <ClInclude Include="..\..\Sources\Header\MallocWorld.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

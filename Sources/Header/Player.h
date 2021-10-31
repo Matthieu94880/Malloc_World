@@ -37,10 +37,18 @@ typedef struct Player {
     int xpNextLevel;                //the quantity of xp needed for a level up
     int hpMax;                      //the maximum quantity of life that the player can reach
     float currHp;                   //the current quantity of life of the player
+    int movingCount;
     inventory CurrentInventory;     //the inventory of the player
 
-}Player;
+}
+Player;
 
-Player *    initPlayer();
+Player *    init_Player();
+
+void        initializeMovingCount_Player(Player * player);
+void        incrementMovingCount_Player(Player * player);
+int         getMovingCount_Player(const Player * player);
+
+int         isAlive_Player(Player * player);
 
 #endif Player_h_

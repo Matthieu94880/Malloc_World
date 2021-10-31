@@ -1,85 +1,93 @@
+/*
+** Filename : Map.c
+**
+** Made by : Matthieu BARRIERE
+**
+** Description : Manages the Malloc_World map content
+*/
+
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "Map.h"
 
-typedef struct
-{
+typedef struct {
     Element_Map     element;
     int             min;
 }
-ElementObligatoire;
+MandatoryElement;
 
 /*****************************************************************************
-** Retourne un nombre aléatoire entre un intervalle
-** - appel de la fonction systeme de nombre aleatoire
-** - on ramene ensuite la valeur obtenue pour qu'elle soit dans l'intervalle
+** Returns a randomize number between min and max values
 ******************************************************************************/
-static int random(int valeurMin, int valeurMax)
-{
-    int valeur;
+static int random(int min, int max) {
 
-    if (valeurMin >= valeurMax)
-    {
-        valeur = valeurMin;
+    int value;
+
+    if (min >= max) {
+        value = min;
     }
-    else
-    {
-        valeur = rand();
+    else {
+        value = rand();
 
-        valeur = valeur % (valeurMax+1 - valeurMin);
-        valeur = valeur + valeurMin;
+        value = value % (max+1 - min);
+        value = value + min;
     }
 
-    return valeur;
+    return value;
 }
 
 /*****************************************************************************
-** Ecrit un element dans la zone de la map
-** Pour un monstre, la valeur varie entre 12 et 98
+** Setting a map element to a position.
+** For a monster, value is between 12 and 98
+** For the player, the zone is empty but the player position is memorized
 ******************************************************************************/
-static void EcrireElementMap(Map * map, Element_Map element, int hauteur, int largeur)
-{
-    if (map->hauteur > hauteur && hauteur >= 0 &&
-        map->largeur > largeur && largeur >= 0)
-    {
-        if (element == ELT_MONSTRE)
-        {
+void setElement_Map(Map * map, int x, int y, Element_Map element) {
+
+    if (map->height > y && y >= 0 &&
+        map->width > x && x >= 0) {
+
+        if (element == ELT_MONSTRE) {
             element = random(12, 98);
         }
-        else if (element == ELT_JOUEUR)
-        {
-            playerPosition.x = largeur;
-            playerPosition.y = hauteur;
+        else if (element == ELT_JOUEUR) {
+            playerPosition.x = x;
+            playerPosition.y = y;
+
+            element = ELT_ZONE_LIBRE;
         }
 
-        map->contenu[hauteur][largeur] = element;
+        map->alteredContain[x][y] = element;
     }
 }
 
 /*****************************************************************************
-** Retourne l'element de la zone de la map
+** Getting a map element from a position
 ******************************************************************************/
-Element_Map LireElement_Map(const Map * map, int hauteur, int largeur)
-{
-    if (map->hauteur > hauteur && hauteur >= 0 &&
-        map->largeur > largeur && largeur >= 0)
-    {
-        return map->contenu[hauteur][largeur];
+Element_Map getElement_Map(const Map * map, int x, int y) {
+
+    if (map->height > y && y >= 0 &&
+        map->width > x && x >= 0) {
+
+        if (playerPosition.x == x &&
+            playerPosition.y == y) {
+            return ELT_JOUEUR;
+        }
+
+        return map->alteredContain[x][y];
     }
 
     return ELT_NULL;
 }
 
 /*****************************************************************************
-** Complete le remplissage de la map avec les éléments facultatifs
-** La liste des élements acceptés depend de la zone
+** Setting optionals elements into the map
 ******************************************************************************/
-static void PositionnerElementsFacultatifs(Map * map)
-{
-    int  nombreEltListe;
+static void setOptionalElements(Map * map) {
 
-    Element_Map elementsFacultatifsZone1[] = {
+    int  elementCount;
+
+    Element_Map optionalElementsZone1[] = {
                 ELT_MONSTRE,
                 ELT_INFRANCHISSABLE,
                 ELT_ZONE_LIBRE,
@@ -87,7 +95,7 @@ static void PositionnerElementsFacultatifs(Map * map)
                 ELT_PLANTE_ZONE1,
                 ELT_BOIS_ZONE1 };
 
-    Element_Map elementsFacultatifsZone2[] = {
+    Element_Map optionalElementsZone2[] = {
                 ELT_MONSTRE,
                 ELT_INFRANCHISSABLE,
                 ELT_ZONE_LIBRE,
@@ -95,7 +103,7 @@ static void PositionnerElementsFacultatifs(Map * map)
                 ELT_PLANTE_ZONE2,
                 ELT_BOIS_ZONE2 };
 
-    Element_Map elementsFacultatifsZone3[] = {
+    Element_Map optionalElementsZone3[] = {
                 ELT_MONSTRE,
                 ELT_INFRANCHISSABLE,
                 ELT_ZONE_LIBRE,
@@ -103,56 +111,55 @@ static void PositionnerElementsFacultatifs(Map * map)
                 ELT_PLANTE_ZONE3,
                 ELT_BOIS_ZONE3 };
 
-    Element_Map * liste;
+    Element_Map * list;
 
-    switch (map->zone)
-    {
-        case ZONE1:
-        {
-            liste = elementsFacultatifsZone1;
-            nombreEltListe = sizeof(elementsFacultatifsZone1) / sizeof(Element_Map);
+    switch (map->zone) {
+
+        case ZONE1: {
+            list = optionalElementsZone1;
+            elementCount = sizeof(optionalElementsZone1) / sizeof(Element_Map);
             break;
         }
 
-        case ZONE2:
-        {
-            liste = elementsFacultatifsZone2;
-            nombreEltListe = sizeof(elementsFacultatifsZone2) / sizeof(Element_Map);
+        case ZONE2: {
+            list = optionalElementsZone2;
+            elementCount = sizeof(optionalElementsZone2) / sizeof(Element_Map);
             break;
         }
 
-        default:
-        {
-            liste = elementsFacultatifsZone3;
-            nombreEltListe = sizeof(elementsFacultatifsZone3) / sizeof(Element_Map);
+        default: {
+            list = optionalElementsZone3;
+            elementCount = sizeof(optionalElementsZone3) / sizeof(Element_Map);
         }
     }
 
-    for (int idxHauteur = 0; idxHauteur < map->hauteur; idxHauteur++)
-    {
-        for (int idxLargeur = 0; idxLargeur < map->largeur; idxLargeur++)
-        {
-            if (LireElement_Map(map, idxHauteur, idxLargeur) == ELT_NULL)
-            {
-                int indexElt = random(0, nombreEltListe - 1);
+    for (int x = 0; x < map->width; x++) {
 
-                EcrireElementMap(map, liste[indexElt], idxHauteur, idxLargeur);
+        for (int y = 0; y < map->height; y++) {
+
+            if (getElement_Map(map, x, y) == ELT_NULL) {
+
+                int indexElt = random(0, elementCount - 1);
+
+                setElement_Map(map, x, y, list[indexElt]);
+                map->originalContain[x][y] = map->alteredContain[x][y];
             }
         }
     }
 }
 
 /*****************************************************************************
-** Rempli la map avec les éléments obligatoires
-** Chaque éléments contient :
-** - un élement et un nombre minimum a placer dans la map pour cet élement
+** Setting mandatory elements into the map
+** Each elements contains :
+** - a minimum number into the map
+** - a player for the first zone only (for the others zone, player will be on
+**   the portal zone
 ******************************************************************************/
-static void PositionnerElementsObligatoires(Map * map)
-{
-    int  nombreTypeListe;
+static void setMandatoryElements(Map * map) {
 
-    ElementObligatoire listeObligatoireZone1[] =
-    {
+    int  elementCount;
+
+    MandatoryElement mandatoryElementsZone1[] = {
         /* TYPE                 MIN */
            ELT_MONSTRE        , 10,
            ELT_ROCHER_ZONE1   ,  3,
@@ -163,83 +170,77 @@ static void PositionnerElementsObligatoires(Map * map)
            ELT_PORTAIL_ZONE1_2,  1
     };
 
-    ElementObligatoire listeObligatoireZone2[] =
-    {
+    MandatoryElement mandatoryElementsZone2[] = {
         /* TYPE                 MIN */
            ELT_MONSTRE        , 10,
            ELT_ROCHER_ZONE2   ,  3,
            ELT_PLANTE_ZONE2   ,  3,
            ELT_BOIS_ZONE2     ,  3,
-           ELT_JOUEUR         ,  1,
            ELT_PNJ            ,  1,
            ELT_PORTAIL_ZONE1_2,  1,
            ELT_PORTAIL_ZONE2_3,  1
     };
 
-    ElementObligatoire listeObligatoireZone3[] =
-    {
+    MandatoryElement mandatoryElementsZone3[] = {
         /* TYPE                 MIN */
            ELT_MONSTRE        , 10,
            ELT_ROCHER_ZONE3   ,  3,
            ELT_PLANTE_ZONE3   ,  3,
            ELT_BOIS_ZONE3     ,  3,
-           ELT_JOUEUR         ,  1,
            ELT_PNJ            ,  1,
            ELT_PORTAIL_ZONE2_3,  1,
            ELT_BOSS           ,  1
     };
 
-    ElementObligatoire * liste;
+    MandatoryElement * list;
         
-    switch (map->zone)
-    {
-        case ZONE1:
-        {
-            liste = listeObligatoireZone1;
-            nombreTypeListe = sizeof(listeObligatoireZone1) / sizeof(ElementObligatoire);
+    switch (map->zone) {
+
+        case ZONE1: {
+            list = mandatoryElementsZone1;
+            elementCount = sizeof(mandatoryElementsZone1) / sizeof(MandatoryElement);
             break;
         }
 
-        case ZONE2:
-        {
-            liste = listeObligatoireZone2;
-            nombreTypeListe = sizeof(listeObligatoireZone2) / sizeof(ElementObligatoire);
+        case ZONE2: {
+            list = mandatoryElementsZone2;
+            elementCount = sizeof(mandatoryElementsZone2) / sizeof(MandatoryElement);
             break;
         }
 
-        default:
-        {
-            liste = listeObligatoireZone3;
-            nombreTypeListe = sizeof(listeObligatoireZone3) / sizeof(ElementObligatoire);
+        default: {
+            list = mandatoryElementsZone3;
+            elementCount = sizeof(mandatoryElementsZone3) / sizeof(MandatoryElement);
         }
     }
 
-    int nombreCaseRestant = map->hauteur * map->largeur;
+    int zoneCount = map->height * map->width;
 
-    for (int idxListe = 0; idxListe < nombreTypeListe; idxListe++)
-    {
-        for (int idxElt = 0; idxElt < liste[idxListe].min; idxElt++)
-        {
+    for (int idxList = 0; idxList < elementCount; idxList++) {
+
+        for (int idxElt = 0; idxElt < list[idxList].min; idxElt++) {
+
             /* positionnement aléatoire de l'element dans une des cases restantes de la map */
 
-            char    estTrouveCase = 0;
-            int     indexCaseLibre = 0;
-            int     indexCaseMapLibreChoisi = random(0, nombreCaseRestant - 1);
+            char    isZoneFound = 0;
+            int     indexFreeZone = 0;
+            int     indexSelectedFreeZone = random(0, zoneCount - 1);
 
-            for (int idxHauteur = 0; !estTrouveCase && idxHauteur < map->hauteur; idxHauteur++)
-            {
-                for (int idxLargeur = 0; !estTrouveCase && idxLargeur < map->largeur; idxLargeur++)
-                {
-                    if (LireElement_Map(map, idxHauteur, idxLargeur) == ELT_NULL)
-                    {
-                        if (indexCaseLibre == indexCaseMapLibreChoisi)
-                        {
-                            EcrireElementMap(map, liste[idxListe].element, idxHauteur, idxLargeur);
-                            estTrouveCase = 1;
+            for (int x = 0; !isZoneFound && x < map->width; x++) {
+
+                for (int y = 0; !isZoneFound && y < map->height; y++) {
+
+                    if (getElement_Map(map, x, y) == ELT_NULL) {
+
+                        if (indexFreeZone == indexSelectedFreeZone) {
+
+                            setElement_Map(map, x, y, list[idxList].element);
+                            map->originalContain[x][y] = map->alteredContain[x][y];
+                            isZoneFound = 1;
                         }
-                        else
-                        {
-                            indexCaseLibre++;
+                        else {
+
+                            indexFreeZone++;
                         }
                     }
                 }
@@ -249,37 +250,40 @@ static void PositionnerElementsObligatoires(Map * map)
 }
 
 /*****************************************************************************
-** Rempli la map aleatoirement
+** Setting elements into the map
 ******************************************************************************/
-void Remplir_Map(Map * map)
-{
-    PositionnerElementsObligatoires(map);
-    PositionnerElementsFacultatifs(map);
+void set_Map(Map * map) {
+
+    setMandatoryElements(map);
+    setOptionalElements(map);
 }
 
 /*****************************************************************************
-** Alloue la map et l'initialise
+** Map memory allocation and initialization
 ******************************************************************************/
-Map * Creer_Map(Zone_Map zone, int hauteur, int largeur)
-{
+Map * create_Map(Zone_Map zone, int width, int height) {
+
     Map * map = (Map*)malloc(sizeof(Map));
 
-    map->zone    = zone;
-    map->largeur = hauteur;
-    map->hauteur = largeur;
+    map->zone   = zone;
+    map->width  = width;
+    map->height = height;
 
-    map->contenu = malloc(sizeof(Element_Map*) * map->hauteur);
+    map->originalContain = malloc(sizeof(Element_Map*) * map->width);
+    map->alteredContain  = malloc(sizeof(Element_Map*) * map->width);
 
-    for (int idxHauteur = 0; idxHauteur < map->hauteur; idxHauteur++)
-    {
-        map->contenu[idxHauteur] = malloc(sizeof(Element_Map) * map->largeur);
+    for (int x = 0; x < map->width; x++) {
+
+        map->originalContain[x] = malloc(sizeof(Element_Map) * map->height);
+        map->alteredContain[x]  = malloc(sizeof(Element_Map) * map->height);
     }
 
-    for (int idxHauteur = 0; idxHauteur < map->hauteur; idxHauteur++)
-    {
-        for (int idxLargeur = 0; idxLargeur < map->largeur; idxLargeur++)
-        {
-            EcrireElementMap(map, ELT_NULL, idxHauteur, idxLargeur);
+    for (int x = 0; x < map->width; x++) {
+
+        for (int y = 0; y < map->height; y++) {
+
+            setElement_Map(map, x, y, ELT_NULL);
+            map->originalContain[x][y] = map->alteredContain[x][y];
         }
     }
 
@@ -293,28 +297,58 @@ Map * Creer_Map(Zone_Map zone, int hauteur, int largeur)
 }
 
 /*****************************************************************************
-** Desalloue la map
+** Map memory release
 ******************************************************************************/
-void Detruire_Map(Map * map)
-{
-    for (int idxHauteur = 0; idxHauteur < map->hauteur; idxHauteur++)
-    {
-        free(map->contenu[idxHauteur]);
+void free_Map(Map * map) {
+
+    for (int x = 0; x < map->width; x++) {
+
+        free(map->originalContain[x]);
+        free(map->alteredContain[x]);
     }
 
-    free(map->contenu);
+    free(map->originalContain);
+    free(map->alteredContain);
     free(map);
 
     map = NULL;
 }
 
 /*****************************************************************************
-** Affiche la map vers la console
+** Reappear all original map resources
 ******************************************************************************/
-void Afficher_Map(const Map * map)
-{
+void reappearResources_Map(Map * map) {
+
+    printf("\nReapparition des ressources");
+
+    for (int y = 0; y < map->height; y++) {
+
+        for (int x = 0; x < map->width; x++) {
+
+            switch (map->originalContain[x][y]) {
+
+            case ELT_PLANTE_ZONE1:
+            case ELT_PLANTE_ZONE2:
+            case ELT_PLANTE_ZONE3:
+            case ELT_ROCHER_ZONE1:
+            case ELT_ROCHER_ZONE2:
+            case ELT_ROCHER_ZONE3:
+            case ELT_BOIS_ZONE1:
+            case ELT_BOIS_ZONE2:
+            case ELT_BOIS_ZONE3:
+                map->alteredContain[x][y] = map->originalContain[x][y];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+** Printing the map content
+******************************************************************************/
+void print_Map(const Map * map) {
+
     printf("\n*******************\n");
-    printf("Zone : %d (%dx%d)\n", map->zone, map->hauteur, map->largeur);
+    printf("Zone : %d (%dx%d)\n", map->zone, map->height, map->width);
     printf("*******************\n");
 
     printf("PORTAIL_ZONE3   = -3\n");
@@ -335,36 +369,35 @@ void Afficher_Map(const Map * map)
     printf("MONSTRE         = 12\n");
     printf("BOSS            = 99\n\n");
 
-    for (int idxHauteur = 0; idxHauteur < map->hauteur; idxHauteur++)
-    {
-        for (int idxLargeur = 0; idxLargeur < map->largeur; idxLargeur++)
-        {
-            Element_Map elt = LireElement_Map(map, idxHauteur, idxLargeur);
+    for (int y = 0; y < map->height; y++) {
 
-            if (elt == ELT_NULL)
-                printf("-- ");
-            else if (elt < 0)
-            {
-                printf("%d ", LireElement_Map(map, idxHauteur, idxLargeur));
+        for (int x = 0; x < map->width; x++) {
+
+            Element_Map elt;
+
+            if (x == playerPosition.x && y == playerPosition.y) {
+
+                elt = ELT_JOUEUR;
             }
-            else
-            {
-                printf("%2d ", LireElement_Map(map, idxHauteur, idxLargeur));
+            else {
+
+                elt = getElement_Map(map, x, y);
+            }
+
+            if (elt == ELT_NULL) {
+
+                printf("-- ");
+            }
+            else if (elt < 0) {
+
+                printf("%d ", getElement_Map(map, x, y));
+            }
+            else {
+
+                printf("%2d ", getElement_Map(map, x, y));
             }
         }
 
         printf("\n");
-    }
-}
-
-/*****************************************************************************
-** Ecrit un element dans un endroit de la map
-******************************************************************************/
-void EcrireElement_Map(const Map * map, int hauteur, int largeur, Element_Map element)
-{
-    if (map->hauteur > hauteur && hauteur >= 0 &&
-        map->largeur > largeur && largeur >= 0)
-    {
-        map->contenu[hauteur][largeur] = element;
     }
 }

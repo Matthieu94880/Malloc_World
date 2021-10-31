@@ -3,25 +3,35 @@
 //
 #include "../header/player.h"
 #include "../header/item_list.h"
+
 //init the player with beggining values
-Player *initPlayer() {
+Player * init_Player() {
     Player *Hero = malloc(sizeof(Player));
     Hero->level = 1;
     Hero->xp = 0;
     Hero->xpNextLevel=100;
     Hero->hpMax = 100;
     Hero->currHp = 100;
+    Hero->movingCount = 0;
 
     return Hero;
 }
 
+void initializeMovingCount_Player(Player * player) {
+    player->movingCount = 0;
+}
 
+void incrementMovingCount_Player(Player * player) {
+    player->movingCount++;
+}
 
+int getMovingCount_Player(const Player * player) {
+    return player->movingCount;
+}
 
-
-
-
-
+int isAlive_Player(Player * player) {
+    return player->currHp == 0 ? 0 : 1;
+}
 
 //modify the armor of the Player
 Player modifyArmor(Player *Hero, int idArmor, itemList *item) {

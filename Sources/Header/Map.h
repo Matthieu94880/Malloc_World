@@ -1,9 +1,15 @@
+/*
+** Filename : Map.h
+**
+** Made by : Matthieu BARRIERE
+**
+** Description : Manages the Malloc_World map content
+*/
 
 #ifndef Map_h_
 #define Map_h_
 
-typedef enum
-{
+typedef enum {
     ELT_NULL            = -9,
 
     ELT_PORTAIL_ZONE2_3 = -3,
@@ -26,58 +32,62 @@ typedef enum
 }
 Element_Map;
 
-typedef enum
-{
+typedef enum {
     ZONE1 = 1,
     ZONE2 = 2,
     ZONE3 = 3
 }
 Zone_Map;
 
-typedef struct
-{
+typedef struct {
     Zone_Map        zone;
-    int             largeur;
-    int             hauteur;
-    Element_Map **  contenu;
+    int             width;
+    int             height;
+    Element_Map **  originalContain;  // contain at started game
+    Element_Map **  alteredContain;   // contain after player moving
 }
 Map;
 
-struct
-{
+struct {
     int x;
     int y;
 }
 playerPosition;
 
 /*****************************************************************************
-** Alloue la map et l'initialise
+** Map memory allocation and initialization
 ******************************************************************************/
-Map *   Creer_Map(Zone_Map zone, int hauteur, int largeur);
+Map *   create_Map(Zone_Map zone, int width, int height);
 
 /*****************************************************************************
-** Rempli la map aleatoirement
+** Map memory release
 ******************************************************************************/
-void    Remplir_Map(Map * map);
+void    free_Map(Map * map);
 
 /*****************************************************************************
-** Retourne l'element de la zone de la map
+** Setting elements into the map
 ******************************************************************************/
-Element_Map LireElement_Map(const Map * map, int hauteur, int largeur);
+void    set_Map(Map * map);
 
 /*****************************************************************************
-** Ecrit un element dans un endroit de la map
+** Setting a map element to a position.
+** For a monster, value is between 12 and 98
 ******************************************************************************/
-void    EcrireElement_Map(const Map * map, int hauteur, int largeur, Element_Map element);
+void    setElement_Map(Map * map, int x, int y, Element_Map element);
 
 /*****************************************************************************
-** Desalloue la map
+** Getting a map element from a position
 ******************************************************************************/
-void    Detruire_Map(Map * map);
+Element_Map getElement_Map(const Map * map, int x, int y);
 
 /*****************************************************************************
-** Affiche la map vers la console
+** Reappear all original map resources
 ******************************************************************************/
-void    Afficher_Map(const Map * map);
+void    reappearResources_Map(Map * map);
+
+/*****************************************************************************
+** Printing the map content
+******************************************************************************/
+void    print_Map(const Map * map);
 
 #endif

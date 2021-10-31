@@ -19,16 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Sources\Source\Action.c" />
     <ClCompile Include="..\..\Sources\Source\Item_list.c" />
     <ClCompile Include="..\..\Sources\Source\Main.c" />
+    <ClCompile Include="..\..\Sources\Source\MallocWorld.c" />
     <ClCompile Include="..\..\Sources\Source\Map.c" />
     <ClCompile Include="..\..\Sources\Source\MapGraphic.c" />
     <ClCompile Include="..\..\Sources\Source\Player.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Sources\Header\Action.h" />
     <ClInclude Include="..\..\Sources\Header\Item_list.h" />
+    <ClInclude Include="..\..\Sources\Header\MallocWorld.h" />
     <ClInclude Include="..\..\Sources\Header\Map.h" />
     <ClInclude Include="..\..\Sources\Header\MapGraphic.h" />
     <ClInclude Include="..\..\Sources\Header\Player.h" />
