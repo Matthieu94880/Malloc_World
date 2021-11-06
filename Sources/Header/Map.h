@@ -43,16 +43,10 @@ typedef struct {
     Zone_Map        zone;
     int             width;
     int             height;
-    Element_Map **  originalContain;  // contain at started game
+    Element_Map **  originalContain;  // contain at started of game (used for reappears)
     Element_Map **  alteredContain;   // contain after player moving
 }
 Map;
-
-struct {
-    int x;
-    int y;
-}
-playerPosition;
 
 /*****************************************************************************
 ** Map memory allocation and initialization
@@ -81,13 +75,45 @@ void    setElement_Map(Map * map, int x, int y, Element_Map element);
 Element_Map getElement_Map(const Map * map, int x, int y);
 
 /*****************************************************************************
-** Reappear all original map resources
+** Initializes player move count on the map
 ******************************************************************************/
-void    reappearResources_Map(Map * map);
+void    initializeMoveCount_Map();
+
+/*****************************************************************************
+** Increment player move count on the map
+******************************************************************************/
+void    incrementMoveCount_Map();
+
+/*****************************************************************************
+** Reappear all original map resources or monsters from move count value
+** If isForced is 1, all elements reappear (map travel)
+** Returns 1 if at least one element as reappeared, else 0
+******************************************************************************/
+int     reappearElement_Map(Map * map, int isForced);
+
+/*****************************************************************************
+** Returns the player position on the map (X value)
+******************************************************************************/
+int     getPlayerPositionX_Map();
+
+/*****************************************************************************
+** Returns the player position on the map (Y value)
+******************************************************************************/
+int     getPlayerPositionY_Map();
+
+/*****************************************************************************
+** Sets the player position on the map
+******************************************************************************/
+void    setPlayerPosition_Map(int x, int y);
 
 /*****************************************************************************
 ** Printing the map content
 ******************************************************************************/
 void    print_Map(const Map * map);
+
+/*****************************************************************************
+** Returns a randomize number between min and max values
+******************************************************************************/
+int     random(int min, int max);
 
 #endif

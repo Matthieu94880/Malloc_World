@@ -1,6 +1,5 @@
 *.o
 *.obj
-*.iobj
 *.enc
 *.layout
 *.suo
@@ -9,3 +8,4 @@
 *.tlog
 *.ipch
 *.ilk
+*.iobj

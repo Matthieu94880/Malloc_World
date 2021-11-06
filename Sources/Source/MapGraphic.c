@@ -130,6 +130,12 @@ void display_MapGraphic(const Map * map) {
 
     if (pWindow != NULL) {
 
+        SDL_SetWindowTitle(pWindow, map->zone == ZONE1 ? "MALLOC_WORLD : ZONE1" :
+                                    map->zone == ZONE2 ? "MALLOC_WORLD : ZONE2" :
+                                                         "MALLOC_WORLD : ZONE3");
+
+        SDL_SetWindowSize(pWindow, PICTURE_WIDTH * map->width, PICTURE_HEIGHT * map->height);
+
         for (int x = 0; x < map->width; x++) {
 
             for (int y = 0; y < map->height; y++) {
@@ -137,10 +143,6 @@ void display_MapGraphic(const Map * map) {
                 displayZone(map, x, y);
             }
         }
-
-        SDL_SetWindowTitle(pWindow, map->zone == ZONE1 ? "MALLOC_WORLD : ZONE1" :
-                                    map->zone == ZONE2 ? "MALLOC_WORLD : ZONE2" :
-                                                         "MALLOC_WORLD : ZONE3");
 
         int returnCode = SDL_UpdateWindowSurface(pWindow);
 

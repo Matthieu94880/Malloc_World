@@ -19,19 +19,25 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Sources\Source\Fight.c" />
     <ClCompile Include="..\..\Sources\Source\Item_list.c" />
     <ClCompile Include="..\..\Sources\Source\Main.c" />
     <ClCompile Include="..\..\Sources\Source\MallocWorld.c" />
     <ClCompile Include="..\..\Sources\Source\Map.c" />
     <ClCompile Include="..\..\Sources\Source\MapGraphic.c" />
     <ClCompile Include="..\..\Sources\Source\Player.c" />
+    <ClCompile Include="..\..\Sources\Source\PNJ.c" />
+    <ClCompile Include="..\..\Sources\Source\Save.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Sources\Header\Fight.h" />
     <ClInclude Include="..\..\Sources\Header\Item_list.h" />
     <ClInclude Include="..\..\Sources\Header\MallocWorld.h" />
     <ClInclude Include="..\..\Sources\Header\Map.h" />
     <ClInclude Include="..\..\Sources\Header\MapGraphic.h" />
     <ClInclude Include="..\..\Sources\Header\Player.h" />
+    <ClInclude Include="..\..\Sources\Header\PNJ.h" />
+    <ClInclude Include="..\..\Sources\Header\Save.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{323160F6-AE53-4C05-8D0E-7A4355E48E6C}</ProjectGuid>

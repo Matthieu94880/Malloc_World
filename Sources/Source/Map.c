@@ -17,10 +17,22 @@ typedef struct {
 }
 MandatoryElement;
 
+static struct {
+    int beforeResourceReappear;
+    int beforeMonsterReappear;
+}
+playerMoveCount;
+
+static struct {
+    int x;
+    int y;
+}
+playerPosition;
+
 /*****************************************************************************
 ** Returns a randomize number between min and max values
 ******************************************************************************/
-static int random(int min, int max) {
+int random(int min, int max) {
 
     int value;
 
@@ -162,10 +174,10 @@ static void setMandatoryElements(Map * map) {
     MandatoryElement mandatoryElementsZone1[] = {
         /* TYPE                 MIN */
            ELT_MONSTRE        , 10,
+           ELT_JOUEUR         ,  1,
            ELT_ROCHER_ZONE1   ,  3,
            ELT_PLANTE_ZONE1   ,  3,
            ELT_BOIS_ZONE1     ,  3,
-           ELT_JOUEUR         ,  1,
            ELT_PNJ            ,  1,
            ELT_PORTAIL_ZONE1_2,  1
     };
@@ -214,7 +226,7 @@ static void setMandatoryElements(Map * map) {
         }
     }
 
-    int zoneCount = map->height * map->width;
+    int freeZoneCount = map->height * map->width;
 
     for (int idxList = 0; idxList < elementCount; idxList++) {
 
@@ -224,7 +236,7 @@ static void setMandatoryElements(Map * map) {
 
             char    isZoneFound = 0;
             int     indexFreeZone = 0;
-            int     indexSelectedFreeZone = random(0, zoneCount - 1);
+            int     indexSelectedFreeZone = random(0, freeZoneCount - 1);
 
             for (int x = 0; !isZoneFound && x < map->width; x++) {
 
@@ -237,6 +249,7 @@ static void setMandatoryElements(Map * map) {
                             setElement_Map(map, x, y, list[idxList].element);
                             map->originalContain[x][y] = map->alteredContain[x][y];
                             isZoneFound = 1;
+                            freeZoneCount--;
                         }
                         else {
 
@@ -290,8 +303,7 @@ Map * create_Map(Zone_Map zone, int width, int height) {
     // Initialisation de la graine par rapport a la date en cours pour les fonctions rand()
     srand((unsigned int)time(NULL));
     
-    playerPosition.x = 0;
-    playerPosition.y = 0;
+    setPlayerPosition_Map(-1, -1);
 
     return map;
 }
@@ -317,7 +329,7 @@ void free_Map(Map * map) {
 /*****************************************************************************
 ** Reappear all original map resources
 ******************************************************************************/
-void reappearResources_Map(Map * map) {
+void reappearResources(Map * map) {
 
     printf("\nReapparition des ressources");
 
@@ -340,6 +352,91 @@ void reappearResources_Map(Map * map) {
             }
         }
     }
+}
+
+/*****************************************************************************
+** Reappear all original map monsters
+******************************************************************************/
+void reappearMonsters(Map * map) {
+
+    printf("\nReapparition des monstres");
+
+    for (int y = 0; y < map->height; y++) {
+
+        for (int x = 0; x < map->width; x++) {
+
+            if (map->originalContain[x][y] >= 12 && map->originalContain[x][y] <= 98) {
+                map->alteredContain[x][y] = map->originalContain[x][y];
+            }
+        }
+    }
+}
+
+/*****************************************************************************
+** Reappear all original map resources or monsters from move count value
+** If isForced is 1, all elements reappear.
+** Returns 1 if at least one element as reappeared, else 0
+******************************************************************************/
+int reappearElement_Map(Map * map, int isForced) {
+
+    int oneElementReappeared = 0;
+
+    if (playerMoveCount.beforeMonsterReappear == 0 || isForced == 1) {
+        playerMoveCount.beforeMonsterReappear = 15;
+        reappearMonsters(map);
+        oneElementReappeared = 1;
+    }
+
+    if (playerMoveCount.beforeResourceReappear == 0 || isForced == 1) {
+        playerMoveCount.beforeResourceReappear = 10;
+        reappearResources(map);
+        oneElementReappeared = 1;
+    }
+
+    return oneElementReappeared;
+}
+
+/*****************************************************************************
+** Initializes player move count on the map
+******************************************************************************/
+void initializeMoveCount_Map() {
+
+    playerMoveCount.beforeMonsterReappear  = 15;
+    playerMoveCount.beforeResourceReappear = 10;
+}
+
+/*****************************************************************************
+** Increment player move count on the map
+******************************************************************************/
+void incrementMoveCount_Map() {
+
+    playerMoveCount.beforeMonsterReappear--;
+    playerMoveCount.beforeResourceReappear--;
+}
+
+/*****************************************************************************
+** Returns the player position on the map (X value)
+******************************************************************************/
+int getPlayerPositionX_Map() {
+
+    return playerPosition.x;
+}
+
+/*****************************************************************************
+** Returns the player position on the map (Y value)
+******************************************************************************/
+int getPlayerPositionY_Map() {
+
+    return playerPosition.y;
+}
+
+/*****************************************************************************
+** Sets the player position on the map
+******************************************************************************/
+void setPlayerPosition_Map(int x, int y) {
+
+    playerPosition.x = x;
+    playerPosition.y = y;
 }
 
 /*****************************************************************************
@@ -373,16 +470,7 @@ void print_Map(const Map * map) {
 
         for (int x = 0; x < map->width; x++) {
 
-            Element_Map elt;
-
-            if (x == playerPosition.x && y == playerPosition.y) {
-
-                elt = ELT_JOUEUR;
-            }
-            else {
-
-                elt = getElement_Map(map, x, y);
-            }
+            Element_Map elt = getElement_Map(map, x, y);
 
             if (elt == ELT_NULL) {
 

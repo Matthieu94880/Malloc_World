@@ -10,45 +10,52 @@
 #include <time.h>
 #include <stdbool.h>
 #include <string.h>
+#include <Item_List.h>
+
+#define INVENTORY_MAX_NUMBER      10
+#define INVENTORY_CRAFTMAX_NUMBER 20
+#define INVENTORY_NONE_ID          0
 
 /////////////////////////////////////////////////
 //Structure of the Player's inventory//
 /////////////////////////////////////////////////
 
 typedef struct inventory {
-    int id;                         //The id of the item
-    char name[20];                 //The name of the item
-    char type[20];                 //The type of the item(weapon,tools,armor,crafting ressource,heal)
-    int damage;                     //the damage of the item(only for type  weapon)
-    int resistance;                 //the percentage of damage reduction (only for type armor)
-    int restoring;                  //the number of HP that the item restore (only for type heal)
-    int durabilityMax;              //the number of use of an item ( only for type weapon and tools)
-    int currentDurability;          //the current durability of the item ( only for type weapon and tools)
-    int quantity;                   //the quantity of a crafting ressource (only for crafting ressoruce)
+    ItemId id;                      //The id of the item
+    float  currentDurability;       //the current durability of the item ( only for type weapon and tools)
+    int    quantity;                //the quantity of a crafting ressource (only for crafting ressoruce)
 }inventory;
+
+typedef struct storage {
+    ItemId id;                      //The id of the item
+    int    quantity;                //the quantity of item
+    struct storage * next;          //next item (or NULL)
+}storage;
 
 /////////////////////////////////////////////////
 //Structure of the Player//
 /////////////////////////////////////////////////
 
 typedef struct Player {
-    int level;                      //the level of the player
-    float xp;                       //the quantity of xp
-    int xpNextLevel;                //the quantity of xp needed for a level up
-    int hpMax;                      //the maximum quantity of life that the player can reach
-    float currHp;                   //the current quantity of life of the player
-    int movingCount;
-    inventory CurrentInventory;     //the inventory of the player
-
+    int level;                    //the level of the player
+    int xp;                       //the quantity of xp
+    int xpNextLevel;              //the quantity of xp needed for a level up
+    int hpMax;                    //the maximum quantity of life that the player can reach
+    int currHp;                   //the current quantity of life of the player
+    inventory currentInventory[INVENTORY_MAX_NUMBER]; //the inventory of the player
+    storage * currentStorage;     //the item storage of the player
 }
 Player;
 
 Player *    init_Player();
+void        print_Player(const Player * player);
+int         isAlive_Player(const Player * player);
+int         getLevel_Player(const Player * player);
 
-void        initializeMovingCount_Player(Player * player);
-void        incrementMovingCount_Player(Player * player);
-int         getMovingCount_Player(const Player * player);
+int         useDamagableItem_Player(Player * player, ItemId itemId, int damagePurcent);
+int         addInventoryItem_Player(Player * player, ItemId itemId);
+int         canAddInventoryItem_Player(Player * player, ItemId itemId);
 
-int         isAlive_Player(Player * player);
+void        storeItem_Player(Player * player, ItemId itemId);
 
 #endif Player_h_
