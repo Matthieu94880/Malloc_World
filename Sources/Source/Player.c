@@ -29,6 +29,31 @@ Player * init_Player() {
 }
 
 /*****************************************************************************
+** Manages player level upgrade after a fight
+******************************************************************************/
+void manageLevelUpgrade_Player(Player * player) {
+    if (player->xp >= player->xpNextLevel) {
+        player->level++;
+
+        switch (player->level) {
+        case 2:  player->hpMax += 10; break;
+        case 3:  player->hpMax += 20; break;
+        case 4:  player->hpMax += 30; break;
+        case 5:  player->hpMax += 40; break;
+        case 6:  player->hpMax += 50; break;
+        case 7:  player->hpMax += 50; break;
+        case 8:  player->hpMax += 50; break;
+        default: player->hpMax += 75; break;
+        }
+
+        player->xpNextLevel += 100; // common for all level
+        player->currHp = player->hpMax;
+
+        printf("\nNiveau %d atteint ! (vie=%d)", player->level, player->currHp);
+    }
+}
+
+/*****************************************************************************
 ** Uses an item and sets a damage : returns 1 if success else 0
 ******************************************************************************/
 int useDamagableItem_Player(Player * player, ItemId itemId, int damagePurcent) {
@@ -46,7 +71,7 @@ int useDamagableItem_Player(Player * player, ItemId itemId, int damagePurcent) {
             if (player->currentInventory[i].id == itemId &&
                 player->currentInventory[i].currentDurability >= damage) {
 
-                printf("utiliser %s ? (o/n)", item->name);
+                printf("\nUtiliser %s (durabilite=%.2f dommage=%.2f) ? (o/n) ", item->name, player->currentInventory[i].currentDurability, damage);
 
                 int reponse;
                 
@@ -66,6 +91,29 @@ int useDamagableItem_Player(Player * player, ItemId itemId, int damagePurcent) {
     }
 
     return isUsed;
+}
+
+/*****************************************************************************
+** Uses a quantity of resource item
+******************************************************************************/
+void useResourceItem_Player(Player * player, ItemId itemId, int quantity) {
+
+    for (int i = 0; i < INVENTORY_MAX_NUMBER && quantity > 0; i++) {
+
+        if (player->currentInventory[i].id == itemId) {
+
+            if (player->currentInventory[i].quantity > 0) {
+                if (player->currentInventory[i].quantity >= quantity) {
+                    player->currentInventory[i].quantity -= quantity;
+                    quantity = 0;
+                }
+                else {
+                    quantity -= player->currentInventory[i].quantity;
+                    player->currentInventory[i].quantity = 0;
+                }
+            }
+        }
+    }
 }
 
 /*****************************************************************************
@@ -114,7 +162,7 @@ int addInventoryItem_Player(Player * player, ItemId itemId)
 }
 
 /*****************************************************************************
-** Returns 1 if item can be added into inventorysuccess else 0
+** Returns 1 if item can be added into inventory else 0
 ******************************************************************************/
 int canAddInventoryItem_Player(Player * player, ItemId itemId)
 {
@@ -149,10 +197,6 @@ int canAddInventoryItem_Player(Player * player, ItemId itemId)
             }
 
         }
-    }
-
-    if (canAdd == 0) {
-        printf("inventaire plein");
     }
 
     return canAdd;
@@ -198,6 +242,9 @@ void storeItem_Player(Player * player, ItemId itemId) {
     }
 
     if (isAdd) {
+
+        printf("\n  -> Stockage de %s\n", item->name);
+
         storage * storedItem = player->currentStorage;
 
         while (storedItem != NULL && storedItem->id != itemId) {
@@ -218,24 +265,48 @@ void storeItem_Player(Player * player, ItemId itemId) {
     }
 }
 
+/*****************************************************************************
+** Returns 1 if the player have a quantity of item into current inventory
+******************************************************************************/
+int haveItem_Player(Player * player, ItemId itemId, int quantity) {
+
+    int haveItem = 1;
+
+    for (int i = 0; i < INVENTORY_MAX_NUMBER && quantity > 0; i++) {
+
+        if (player->currentInventory[i].id == itemId) {
+            quantity -= player->currentInventory[i].quantity;
+        }
+    }
+
+    if (quantity > 0) {
+        haveItem = 0;
+    }
+
+    return haveItem;
+}
+
+/*****************************************************************************
+** Print the current player status
+******************************************************************************/
 void print_Player(const Player * player) {
-    printf("\nPlayer : xp=%d/%d hp=%d/%d level=%d", player->xp, player->xpNextLevel, player->currHp, player->hpMax, player->level);
+    printf("\nETAT DU JOUEUR : xp=%d/%d hp=%d/%d level=%d", player->xp, player->xpNextLevel, player->currHp, player->hpMax, player->level);
 
     for (int i = 0; i < INVENTORY_MAX_NUMBER; i++) {
 
         if (player->currentInventory[i].id == ITEM_AUCUN) {
-            printf("\ninventory %d : NONE", i+1);
+            printf("\n - Inventaire %d : aucun", i+1);
         }
         else {
 
             const itemList * item = getItem(player->currentInventory[i].id);
 
             if (item != NULL) {
-                if (item->type == ITEMTYPE_CRAFT) {
-                    printf("\ninventory %d : %s [%s] quantity=%d", i + 1, item->name, item->typeLabel, player->currentInventory[i].quantity);
+                if (item->type == ITEMTYPE_CRAFT || item->type == ITEMTYPE_SOIN) {
+                    printf("\n - Inventaire %d : %s [%s] quantite=%d", i + 1, item->name, item->typeLabel, player->currentInventory[i].quantity);
                 }
                 else {
-                    printf("\ninventory %d : %s [%s] durability=%.1f", i + 1, item->name, item->typeLabel, player->currentInventory[i].currentDurability);
+                    printf("\n - Inventaire %d : %s [%s] durabilite=%.1f", i + 1, item->name, item->typeLabel, player->currentInventory[i].currentDurability);
                 }
             }
         }
@@ -247,16 +318,25 @@ void print_Player(const Player * player) {
         const itemList * item = getItem(storedItem->id);
 
         if (item != NULL) {
-            printf("\nstockage : %d x %s [%s]", storedItem->quantity, item->name, item->typeLabel);
+            if (storedItem->quantity > 0) {
+                printf("\n - Stockage : %d x %s [%s]", storedItem->quantity, item->name, item->typeLabel);
+            }
             storedItem = storedItem->next;
         }
     }
+    printf("\n");
 }
 
+/*****************************************************************************
+** Returns 1 if the player is still alive
+******************************************************************************/
 int isAlive_Player(const Player * player) {
     return player->currHp == 0 ? 0 : 1;
 }
 
+/*****************************************************************************
+** Returns the player level
+******************************************************************************/
 int getLevel_Player(const Player * player) {
     return player->level;
 }

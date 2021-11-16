@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\Sources\Source\MallocWorld.c" />
     <ClCompile Include="..\..\Sources\Source\Map.c" />
     <ClCompile Include="..\..\Sources\Source\MapGraphic.c" />
+    <ClCompile Include="..\..\Sources\Source\Monster.c" />
     <ClCompile Include="..\..\Sources\Source\Player.c" />
     <ClCompile Include="..\..\Sources\Source\PNJ.c" />
     <ClCompile Include="..\..\Sources\Source\Save.c" />
@@ -35,6 +36,7 @@
     <ClInclude Include="..\..\Sources\Header\MallocWorld.h" />
     <ClInclude Include="..\..\Sources\Header\Map.h" />
     <ClInclude Include="..\..\Sources\Header\MapGraphic.h" />
+    <ClInclude Include="..\..\Sources\Header\Monster.h" />
     <ClInclude Include="..\..\Sources\Header\Player.h" />
     <ClInclude Include="..\..\Sources\Header\PNJ.h" />
     <ClInclude Include="..\..\Sources\Header\Save.h" />

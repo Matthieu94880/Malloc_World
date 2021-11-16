@@ -9,6 +9,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "Monster.h"
 #include "Map.h"
 
 typedef struct {
@@ -51,7 +52,6 @@ int random(int min, int max) {
 
 /*****************************************************************************
 ** Setting a map element to a position.
-** For a monster, value is between 12 and 98
 ** For the player, the zone is empty but the player position is memorized
 ******************************************************************************/
 void setElement_Map(Map * map, int x, int y, Element_Map element) {
@@ -59,10 +59,7 @@ void setElement_Map(Map * map, int x, int y, Element_Map element) {
     if (map->height > y && y >= 0 &&
         map->width > x && x >= 0) {
 
-        if (element == ELT_MONSTRE) {
-            element = random(12, 98);
-        }
-        else if (element == ELT_JOUEUR) {
+        if (element == ELT_JOUEUR) {
             playerPosition.x = x;
             playerPosition.y = y;
 
@@ -100,7 +97,9 @@ static void setOptionalElements(Map * map) {
     int  elementCount;
 
     Element_Map optionalElementsZone1[] = {
-                ELT_MONSTRE,
+                ELT_MONSTRE1,
+                ELT_MONSTRE2,
+                ELT_MONSTRE3,
                 ELT_INFRANCHISSABLE,
                 ELT_ZONE_LIBRE,
                 ELT_ROCHER_ZONE1,
@@ -108,7 +107,9 @@ static void setOptionalElements(Map * map) {
                 ELT_BOIS_ZONE1 };
 
     Element_Map optionalElementsZone2[] = {
-                ELT_MONSTRE,
+                ELT_MONSTRE3,
+                ELT_MONSTRE4,
+                ELT_MONSTRE5,
                 ELT_INFRANCHISSABLE,
                 ELT_ZONE_LIBRE,
                 ELT_ROCHER_ZONE2,
@@ -116,7 +117,9 @@ static void setOptionalElements(Map * map) {
                 ELT_BOIS_ZONE2 };
 
     Element_Map optionalElementsZone3[] = {
-                ELT_MONSTRE,
+                ELT_MONSTRE5,
+                ELT_MONSTRE6,
+                ELT_MONSTRE7,
                 ELT_INFRANCHISSABLE,
                 ELT_ZONE_LIBRE,
                 ELT_ROCHER_ZONE3,
@@ -173,33 +176,42 @@ static void setMandatoryElements(Map * map) {
 
     MandatoryElement mandatoryElementsZone1[] = {
         /* TYPE                 MIN */
-           ELT_MONSTRE        , 10,
+           ELT_MONSTRE1       ,  4,
+           ELT_MONSTRE2       ,  3,
+           ELT_MONSTRE3       ,  3,
            ELT_JOUEUR         ,  1,
            ELT_ROCHER_ZONE1   ,  3,
            ELT_PLANTE_ZONE1   ,  3,
            ELT_BOIS_ZONE1     ,  3,
            ELT_PNJ            ,  1,
+           ELT_ZONE_LIBRE     , 10,
            ELT_PORTAIL_ZONE1_2,  1
     };
 
     MandatoryElement mandatoryElementsZone2[] = {
         /* TYPE                 MIN */
-           ELT_MONSTRE        , 10,
+           ELT_MONSTRE3       ,  4,
+           ELT_MONSTRE4       ,  3,
+           ELT_MONSTRE5       ,  3,
            ELT_ROCHER_ZONE2   ,  3,
            ELT_PLANTE_ZONE2   ,  3,
            ELT_BOIS_ZONE2     ,  3,
            ELT_PNJ            ,  1,
+           ELT_ZONE_LIBRE     , 20,
            ELT_PORTAIL_ZONE1_2,  1,
            ELT_PORTAIL_ZONE2_3,  1
     };
 
     MandatoryElement mandatoryElementsZone3[] = {
         /* TYPE                 MIN */
-           ELT_MONSTRE        , 10,
+           ELT_MONSTRE5       ,  4,
+           ELT_MONSTRE6       ,  3,
+           ELT_MONSTRE7       ,  3,
            ELT_ROCHER_ZONE3   ,  3,
            ELT_PLANTE_ZONE3   ,  3,
            ELT_BOIS_ZONE3     ,  3,
            ELT_PNJ            ,  1,
+           ELT_ZONE_LIBRE     , 30,
            ELT_PORTAIL_ZONE2_3,  1,
            ELT_BOSS           ,  1
     };
@@ -331,7 +343,7 @@ void free_Map(Map * map) {
 ******************************************************************************/
 void reappearResources(Map * map) {
 
-    printf("\nReapparition des ressources");
+    printf("\n!!! LES RESSOURCES SONT REAPPARUES !!!\n");
 
     for (int y = 0; y < map->height; y++) {
 
@@ -359,13 +371,13 @@ void reappearResources(Map * map) {
 ******************************************************************************/
 void reappearMonsters(Map * map) {
 
-    printf("\nReapparition des monstres");
+    printf("\n!!! LES MONSTRES SONT REAPPARUS !!!\n");
 
     for (int y = 0; y < map->height; y++) {
 
         for (int x = 0; x < map->width; x++) {
 
-            if (map->originalContain[x][y] >= 12 && map->originalContain[x][y] <= 98) {
+            if (isMonster(map->originalContain[x][y])) {
                 map->alteredContain[x][y] = map->originalContain[x][y];
             }
         }
@@ -463,7 +475,7 @@ void print_Map(const Map * map) {
     printf("PLANTE_ZONE3    =  9\n");
     printf("ROCHER_ZONE3    = 10\n");
     printf("BOIS_ZONE3      = 11\n");
-    printf("MONSTRE         = 12\n");
+    printf("MONSTRE         = 12-97\n");
     printf("BOSS            = 99\n\n");
 
     for (int y = 0; y < map->height; y++) {

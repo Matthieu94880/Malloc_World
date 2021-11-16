@@ -53,9 +53,13 @@ int         isAlive_Player(const Player * player);
 int         getLevel_Player(const Player * player);
 
 int         useDamagableItem_Player(Player * player, ItemId itemId, int damagePurcent);
+void        useResourceItem_Player(Player * player, ItemId itemId, int quantity);
 int         addInventoryItem_Player(Player * player, ItemId itemId);
 int         canAddInventoryItem_Player(Player * player, ItemId itemId);
+int         haveItem_Player(Player * player, ItemId itemId, int quantity);
 
 void        storeItem_Player(Player * player, ItemId itemId);
+
+void        manageLevelUpgrade_Player(Player * player);
 
 #endif Player_h_

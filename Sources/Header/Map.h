@@ -27,7 +27,13 @@ typedef enum {
     ELT_PLANTE_ZONE3    = 9,
     ELT_ROCHER_ZONE3    = 10,
     ELT_BOIS_ZONE3      = 11,
-    ELT_MONSTRE         = 12,
+    ELT_MONSTRE1        = 12,
+    ELT_MONSTRE2        = 13,
+    ELT_MONSTRE3        = 14,
+    ELT_MONSTRE4        = 15,
+    ELT_MONSTRE5        = 16,
+    ELT_MONSTRE6        = 17,
+    ELT_MONSTRE7        = 18,
     ELT_BOSS            = 99
 }
 Element_Map;

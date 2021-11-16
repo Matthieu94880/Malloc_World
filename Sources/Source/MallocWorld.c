@@ -14,12 +14,31 @@
 #include "MapGraphic.h"
 #include "Fight.h"
 #include "PNJ.h"
+#include "Monster.h"
 #include "MallocWorld.h"
 
 static Map * mapZone1 = NULL;
 static Map * mapZone2 = NULL;
 static Map * mapZone3 = NULL;
 static Map * currentMap = NULL;
+
+/*****************************************************************************
+** Display the help menu
+******************************************************************************/
+void printHelp() {
+
+    printf("\n******** COMMANDES *********");
+    printf("\nFleches : deplacer le joueur");
+    printf("\nF1      : afficher la zone 1");
+    printf("\nF2      : afficher la zone 2");
+    printf("\nF3      : afficher la zone 3");
+    printf("\nF10     : charger partie");
+    printf("\nF11     : sauvegarder partie");
+    printf("\nF12     : etat du joueur");
+    printf("\nESC     : quitter la partie");
+    printf("\nAutre   : aide");
+    printf("\n****************************\n");
+}
 
 /*****************************************************************************
 ** Fighting with a monster or a boss
@@ -40,13 +59,15 @@ static void fight(Player * player, Element_Map element, int x, int y) {
         setElement_Map(currentMap, x, y, ELT_ZONE_LIBRE);
         displayZone_MapGraphic(currentMap, x, y);
         displayZone_MapGraphic(currentMap, oldPlayerPosX, oldPlayerPosY);
-
-        printf(" : victoire !");
     }
     else {
 
-        printf(" : joueur mort");
-        _getch();
+        if (!isAlive_Player(player)) {
+            printf("\nVous etes mort");
+            printf("\nAppuyer sur une touche pour terminer la partie");
+            _getch();
+            exit(0);
+        }
     }
 }
 
@@ -191,7 +212,7 @@ static int getRock(Player * player, int x, int y) {
 
     if (currentMap->zone == ZONE1) {
 
-        printf("\nRecolte pierre : ");
+        printf("\nRECOLTE PIERRE");
         itemToAdd = ITEM_PIERRE;
 
         if (canAddInventoryItem_Player(player, itemToAdd)) {
@@ -209,7 +230,7 @@ static int getRock(Player * player, int x, int y) {
     }
     else if (currentMap->zone == ZONE2) {
 
-        printf("\nRecolte fer : ");
+        printf("\nRECOLTE FER");
         itemToAdd = ITEM_FER;
 
         if (canAddInventoryItem_Player(player, itemToAdd)) {
@@ -224,7 +245,7 @@ static int getRock(Player * player, int x, int y) {
     }
     else {
 
-        printf("\nRecolte diamant : ");
+        printf("\nRECOLTE DIAMANT");
         itemToAdd = ITEM_DIAMANT;
 
         if (canAddInventoryItem_Player(player, itemToAdd)) {
@@ -256,11 +277,11 @@ static int getRock(Player * player, int x, int y) {
         displayZone_MapGraphic(currentMap, x, y);
         displayZone_MapGraphic(currentMap, oldPlayerPosX, oldPlayerPosY);
 
-        printf("=> obtenue (x%d)", itemCount);
+        printf("\n=> obtenue (x%d)\n", itemCount);
     }
     else {
 
-        printf("=> non obtenue");
+        printf("\n=> non obtenue\n");
     }
 
     return isGetted;
@@ -276,7 +297,7 @@ static int getGrass(Player * player, int x, int y) {
 
     if (currentMap->zone == ZONE1) {
 
-        printf("\nRecolte herbe : ");
+        printf("\nRECOLTE HERBE");
         itemToAdd = ITEM_HERBE;
 
         if (canAddInventoryItem_Player(player, itemToAdd)) {
@@ -294,7 +315,7 @@ static int getGrass(Player * player, int x, int y) {
     }
     else if (currentMap->zone == ZONE2) {
 
-        printf("\nRecolte lavande : ");
+        printf("\nRECOLTE LAVANDE");
         itemToAdd = ITEM_LAVANDE;
 
         if (canAddInventoryItem_Player(player, itemToAdd)) {
@@ -309,7 +330,7 @@ static int getGrass(Player * player, int x, int y) {
     }
     else {
 
-        printf("\nRecolte chanvre : ");
+        printf("\nRECOLTE CHANVRE");
         itemToAdd = ITEM_CHANVRE;
 
         if (canAddInventoryItem_Player(player, itemToAdd)) {
@@ -341,11 +362,11 @@ static int getGrass(Player * player, int x, int y) {
         displayZone_MapGraphic(currentMap, x, y);
         displayZone_MapGraphic(currentMap, oldPlayerPosX, oldPlayerPosY);
 
-        printf("=> obtenue (x%d)", itemCount);
+        printf("\n=> obtenue (x%d)\n", itemCount);
     }
     else {
 
-        printf("=> non obtenue");
+        printf("\n=> non obtenue\n");
     }
 
     return isGetted;
@@ -361,7 +382,7 @@ static int getWood(Player * player, int x, int y) {
 
     if (currentMap->zone == ZONE1) {
 
-        printf("\nRecolte sapin : ");
+        printf("\nRECOLTE SAPIN");
         itemToAdd = ITEM_SAPIN;
 
         if (canAddInventoryItem_Player(player, itemToAdd)) {
@@ -379,7 +400,7 @@ static int getWood(Player * player, int x, int y) {
     }
     else if (currentMap->zone == ZONE2) {
 
-        printf("\nRecolte hetre : ");
+        printf("\nRECOLTE HETRE");
         itemToAdd = ITEM_HETRE;
 
         if (canAddInventoryItem_Player(player, itemToAdd)) {
@@ -394,7 +415,7 @@ static int getWood(Player * player, int x, int y) {
     }
     else {
 
-        printf("\nRecolte chene : ");
+        printf("\nRECOLTE CHENE");
         itemToAdd = ITEM_CHENE;
 
         if (canAddInventoryItem_Player(player, itemToAdd)) {
@@ -426,11 +447,11 @@ static int getWood(Player * player, int x, int y) {
         displayZone_MapGraphic(currentMap, x, y);
         displayZone_MapGraphic(currentMap, oldPlayerPosX, oldPlayerPosY);
 
-        printf("=> obtenue (x%d)", itemCount);
+        printf("\n=> obtenue (x%d)\n", itemCount);
     }
     else {
 
-        printf("=> non obtenue");
+        printf("\n=> non obtenue\n");
     }
 
     return isGetted;
@@ -465,7 +486,7 @@ static void movePlayer(Player * player, int x, int y) {
 
         int hasMoved = 1;
 
-        if (nextElement >= 12 && nextElement <= 98) {
+        if (isMonster(nextElement)) {
 
             fight(player, nextElement, x, y);
         }
@@ -523,24 +544,6 @@ static void movePlayer(Player * player, int x, int y) {
             }
         }
     }
-}
-
-/*****************************************************************************
-** Display the help menu
-******************************************************************************/
-void printHelp() {
-
-    printf("\n******** COMMANDES *********");
-    printf("\nFleches : deplacer le joueur");
-    printf("\nF1      : afficher la zone 1");
-    printf("\nF2      : afficher la zone 2");
-    printf("\nF3      : afficher la zone 3");
-    printf("\nF4      : etat du joueur");
-    printf("\nF9      : charger sauvegarde");
-    printf("\nF10     : sauvegarder");
-    printf("\nF12     : aide");
-    printf("\nESC     : quitter la partie");
-    printf("\n****************************");
 }
 
 /*****************************************************************************
@@ -607,22 +610,26 @@ void play_MallocWorld() {
             print_Map(mapZone3);
             break;
 
-        case 62: // F4
-            print_Player(player);
-            break;
-
-        case 67: // F9
+        case 68: // F9
             if (load(mapZone1, mapZone2, mapZone3, player) == 1)
             {
                 display_MapGraphic(currentMap);
             }
             break;
 
-        case 68: // F10
+        case 133: // F11
             save(mapZone1, mapZone2, mapZone3, player);
             break;
 
         case 134: // F12
+            print_Player(player);
+            break;
+
+        case 0  : // ignore (F1-10) additionals keys
+        case 224: // ignore (F11-F12) additionals keys
+            break;
+
+        default:
             printHelp();
             break;
         }

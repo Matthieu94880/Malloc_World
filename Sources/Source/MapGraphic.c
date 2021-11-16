@@ -40,7 +40,13 @@ static ElementPicture elementPicture[] = {
     ELT_PLANTE_ZONE3,    ".\\Images\\PLANTE_Z3.BMP", NULL,
     ELT_ROCHER_ZONE3,    ".\\Images\\ROCHER_Z3.BMP", NULL,
     ELT_BOIS_ZONE3,      ".\\Images\\BOIS_Z3.BMP", NULL,
-    ELT_MONSTRE,         ".\\Images\\MONSTRE.BMP", NULL,
+    ELT_MONSTRE1,         ".\\Images\\MONSTRE1.BMP", NULL,
+    ELT_MONSTRE2,         ".\\Images\\MONSTRE2.BMP", NULL,
+    ELT_MONSTRE3,         ".\\Images\\MONSTRE3.BMP", NULL,
+    ELT_MONSTRE4,         ".\\Images\\MONSTRE4.BMP", NULL,
+    ELT_MONSTRE5,         ".\\Images\\MONSTRE5.BMP", NULL,
+    ELT_MONSTRE6,         ".\\Images\\MONSTRE6.BMP", NULL,
+    ELT_MONSTRE7,         ".\\Images\\MONSTRE7.BMP", NULL,
     ELT_BOSS,            ".\\Images\\BOSS.BMP", NULL
 };
 
@@ -79,11 +85,6 @@ static void displayZone(const Map * map, int x, int y) {
 
     if (y < map->height && x < map->width) {
         Element_Map element = getElement_Map(map, x, y);
-
-        // patch a virer : remet tous les monstres de 12 a 98 a 12 pour avoir le meme fichier
-        if (element >= 12 && element <= 98) {
-            element = ELT_MONSTRE;
-        }
 
         SDL_Surface * pSurface = getSurface(element);
 
