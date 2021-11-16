@@ -26,99 +26,99 @@ void createItems(Player * player, Zone_Map currentZone) {
             itemAvailable[itemIdNumber++] = ITEM_EPEE_BOIS;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 2) && haveItem_Player(player, ITEM_PIERRE, 3)) {
+        if (canAddInventoryItem_Player(player, ITEM_EPEE_PIERRE) && haveItem_Player(player, ITEM_SAPIN, 2) && haveItem_Player(player, ITEM_PIERRE, 3)) {
             itemAvailable[itemIdNumber++] = ITEM_EPEE_PIERRE;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_HETRE, 2) && haveItem_Player(player, ITEM_FER, 4) && currentZone > 1) {
+        if (canAddInventoryItem_Player(player, ITEM_EPEE_FER) && haveItem_Player(player, ITEM_HETRE, 2) && haveItem_Player(player, ITEM_FER, 4) && currentZone > 1) {
             itemAvailable[itemIdNumber++] = ITEM_EPEE_FER;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_CHENE, 2) && haveItem_Player(player, ITEM_DIAMANT, 5) && currentZone > 2) {
+        if (canAddInventoryItem_Player(player, ITEM_EPEE_DIAMANT) && haveItem_Player(player, ITEM_CHENE, 2) && haveItem_Player(player, ITEM_DIAMANT, 5) && currentZone > 2) {
             itemAvailable[itemIdNumber++] = ITEM_EPEE_DIAMANT;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 3) && haveItem_Player(player, ITEM_PIERRE, 4)) {
+        if (canAddInventoryItem_Player(player, ITEM_LANCE_PIERRE) && haveItem_Player(player, ITEM_SAPIN, 3) && haveItem_Player(player, ITEM_PIERRE, 4)) {
             itemAvailable[itemIdNumber++] = ITEM_LANCE_PIERRE;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_HETRE, 3) && haveItem_Player(player, ITEM_FER, 5) && currentZone > 1) {
+        if (canAddInventoryItem_Player(player, ITEM_LANCE_FER) && haveItem_Player(player, ITEM_HETRE, 3) && haveItem_Player(player, ITEM_FER, 5) && currentZone > 1) {
             itemAvailable[itemIdNumber++] = ITEM_LANCE_FER;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_CHENE, 3) && haveItem_Player(player, ITEM_DIAMANT, 6) && currentZone > 2) {
+        if (canAddInventoryItem_Player(player, ITEM_LANCE_DIAMANT) && haveItem_Player(player, ITEM_CHENE, 3) && haveItem_Player(player, ITEM_DIAMANT, 6) && currentZone > 2) {
             itemAvailable[itemIdNumber++] = ITEM_LANCE_DIAMANT;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 2) && haveItem_Player(player, ITEM_PIERRE, 6)) {
+        if (canAddInventoryItem_Player(player, ITEM_MARTEAU_PIERRE) && haveItem_Player(player, ITEM_SAPIN, 2) && haveItem_Player(player, ITEM_PIERRE, 6)) {
             itemAvailable[itemIdNumber++] = ITEM_MARTEAU_PIERRE;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_HETRE, 2) && haveItem_Player(player, ITEM_FER, 7) && currentZone > 1) {
+        if (canAddInventoryItem_Player(player, ITEM_MARTEAU_FER) && haveItem_Player(player, ITEM_HETRE, 2) && haveItem_Player(player, ITEM_FER, 7) && currentZone > 1) {
             itemAvailable[itemIdNumber++] = ITEM_MARTEAU_FER;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_CHENE, 2) && haveItem_Player(player, ITEM_DIAMANT, 8) && currentZone > 2) {
+        if (canAddInventoryItem_Player(player, ITEM_MARTEAU_DIAMANT) && haveItem_Player(player, ITEM_CHENE, 2) && haveItem_Player(player, ITEM_DIAMANT, 8) && currentZone > 2) {
             itemAvailable[itemIdNumber++] = ITEM_MARTEAU_DIAMANT;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_PIERRE, 10)) {
+        if (canAddInventoryItem_Player(player, ITEM_PLASTRON_PIERRE) && haveItem_Player(player, ITEM_PIERRE, 10)) {
             itemAvailable[itemIdNumber++] = ITEM_PLASTRON_PIERRE;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_FER, 12) && currentZone > 1) {
+        if (canAddInventoryItem_Player(player, ITEM_PLASTRON_FER) && haveItem_Player(player, ITEM_FER, 12) && currentZone > 1) {
             itemAvailable[itemIdNumber++] = ITEM_PLASTRON_FER;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_DIAMANT, 16) && currentZone > 2) {
+        if (canAddInventoryItem_Player(player, ITEM_PLASTRON_DIAMANT) && haveItem_Player(player, ITEM_DIAMANT, 16) && currentZone > 2) {
             itemAvailable[itemIdNumber++] = ITEM_PLASTRON_DIAMANT;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 3)) {
+        if (canAddInventoryItem_Player(player, ITEM_PIOCHE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 3)) {
             itemAvailable[itemIdNumber++] = ITEM_PIOCHE_BOIS;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 2) && haveItem_Player(player, ITEM_PIERRE, 3)) {
+        if (canAddInventoryItem_Player(player, ITEM_PIOCHE_PIERRE) && haveItem_Player(player, ITEM_SAPIN, 2) && haveItem_Player(player, ITEM_PIERRE, 3)) {
             itemAvailable[itemIdNumber++] = ITEM_PIOCHE_PIERRE;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_HETRE, 2) && haveItem_Player(player, ITEM_FER, 4) && currentZone > 1) {
+        if (canAddInventoryItem_Player(player, ITEM_PIOCHE_FER) && haveItem_Player(player, ITEM_HETRE, 2) && haveItem_Player(player, ITEM_FER, 4) && currentZone > 1) {
             itemAvailable[itemIdNumber++] = ITEM_PIOCHE_FER;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 3)) {
+        if (canAddInventoryItem_Player(player, ITEM_HACHE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 3)) {
             itemAvailable[itemIdNumber++] = ITEM_HACHE_BOIS;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 2) && haveItem_Player(player, ITEM_PIERRE, 3)) {
+        if (canAddInventoryItem_Player(player, ITEM_HACHE_PIERRE) && haveItem_Player(player, ITEM_SAPIN, 2) && haveItem_Player(player, ITEM_PIERRE, 3)) {
             itemAvailable[itemIdNumber++] = ITEM_HACHE_PIERRE;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_HETRE, 2) && haveItem_Player(player, ITEM_FER, 4) && currentZone > 1) {
+        if (canAddInventoryItem_Player(player, ITEM_HACHE_FER) && haveItem_Player(player, ITEM_HETRE, 2) && haveItem_Player(player, ITEM_FER, 4) && currentZone > 1) {
             itemAvailable[itemIdNumber++] = ITEM_HACHE_FER;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 3)) {
+        if (canAddInventoryItem_Player(player, ITEM_SERPE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 3)) {
             itemAvailable[itemIdNumber++] = ITEM_SERPE_BOIS;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_SAPIN, 2) && haveItem_Player(player, ITEM_PIERRE, 3)) {
+        if (canAddInventoryItem_Player(player, ITEM_SERPE_PIERRE) && haveItem_Player(player, ITEM_SAPIN, 2) && haveItem_Player(player, ITEM_PIERRE, 3)) {
             itemAvailable[itemIdNumber++] = ITEM_SERPE_PIERRE;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_HETRE, 2) && haveItem_Player(player, ITEM_FER, 4) && currentZone > 1) {
+        if (canAddInventoryItem_Player(player, ITEM_SERPE_FER) && haveItem_Player(player, ITEM_HETRE, 2) && haveItem_Player(player, ITEM_FER, 4) && currentZone > 1) {
             itemAvailable[itemIdNumber++] = ITEM_SERPE_FER;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_HERBE, 2)) {
+        if (canAddInventoryItem_Player(player, ITEM_POTION_VIE1) && haveItem_Player(player, ITEM_HERBE, 2)) {
             itemAvailable[itemIdNumber++] = ITEM_POTION_VIE1;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_LAVANDE, 2)) {
+        if (canAddInventoryItem_Player(player, ITEM_POTION_VIE2) && haveItem_Player(player, ITEM_LAVANDE, 2)) {
             itemAvailable[itemIdNumber++] = ITEM_POTION_VIE2;
         }
 
-        if (canAddInventoryItem_Player(player, ITEM_EPEE_BOIS) && haveItem_Player(player, ITEM_CHANVRE, 2)) {
+        if (canAddInventoryItem_Player(player, ITEM_POTION_VIE3) && haveItem_Player(player, ITEM_CHANVRE, 2)) {
             itemAvailable[itemIdNumber++] = ITEM_POTION_VIE3;
         }
 
